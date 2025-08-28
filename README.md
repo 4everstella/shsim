@@ -1,7 +1,7 @@
 # SHSIM
 
 [![PyPI](https://img.shields.io/pypi/v/shsim.svg)](https://pypi.org/project/shsim/)
-[![CI](https://github.com/<you>/shsim/actions/workflows/ci.yml/badge.svg)](https://github.com/4everstella/shsim/actions/workflows/ci.yml)
+[![CI](https://github.com/4everstella/shsim/actions/workflows/ci.yml/badge.svg)](https://github.com/4everstella/shsim/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 SHSIM is a tiny unified shell-like helpers, one could use shell like commands
