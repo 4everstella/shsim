@@ -83,12 +83,43 @@ def test_ln_symlink_posix(tmp_path: Path):
     assert dst.read_text(encoding="utf-8") == "data"
 
 
-@pytest.mark.skipif(os.name != "nt", reason="Windows-only fallback behavior")
-def test_ln_fallback_windows(tmp_path: Path):
+def _windows_symlink_allowed(tmp_path: Path) -> bool:
+    if os.name != "nt":
+        return False
+    t_src = tmp_path / "t_src.txt"
+    t_src.write_text("x", encoding="utf-8")
+    t_dst = tmp_path / "t_dst.txt"
+    try:
+        os.symlink(str(t_src), str(t_dst))  # type: ignore[attr-defined]
+        return t_dst.is_symlink()
+    except Exception:
+        return False
+
+@pytest.mark.skipif(os.name != "nt", reason="Windows-only")
+def test_ln_windows_symlink_if_possible(tmp_path: Path):
+    if not _windows_symlink_allowed(tmp_path):
+        pytest.skip("Symlinks not permitted on this Windows host")
     src = tmp_path / "src.txt"
     dst = tmp_path / "dst.txt"
     src.write_text("data", encoding="utf-8")
+
     core.ln(str(src), str(dst))
+
+    assert dst.exists()
+    assert dst.is_symlink()  # explicit: we wanted a link
+
+@pytest.mark.skipif(os.name != "nt", reason="Windows-only")
+def test_ln_windows_copy_fallback_when_denied(tmp_path: Path, monkeypatch):
+    # Force the fallback path by making os.symlink raise
+    if hasattr(os, "symlink"):
+        monkeypatch.setattr(os, "symlink", lambda *a, **k: (_ for _ in ()).throw(OSError("denied")))
+
+    src = tmp_path / "src.txt"
+    dst = tmp_path / "dst.txt"
+    src.write_text("data", encoding="utf-8")
+
+    core.ln(str(src), str(dst))
+
     assert dst.exists()
     assert not dst.is_symlink()
     assert dst.read_text(encoding="utf-8") == "data"
