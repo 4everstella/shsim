@@ -1,18 +1,37 @@
-# SHSIM
 
 [![PyPI](https://img.shields.io/pypi/v/shsim.svg)](https://pypi.org/project/shsim/)
 [![CI](https://github.com/4everstella/shsim/actions/workflows/ci.yml/badge.svg)](https://github.com/4everstella/shsim/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
+# SHSIM
+
 SHSIM is a tiny unified shell-like helpers, one could use shell like commands
 cross Windows, Linux and MacOS systems.
 
-Supported
+**Supported**
 + Python 3.10 - 3.12
 + Win/MacOS/Linux
 
 
+**Install Command**
+
+```
+pip install shsim
+```
+
+**Quick Start**
+
+```python
+from shsim import ls, grep, zipdir, unzip
+print(ls("."))                         # list files
+print(grep("README", "README.md"))     # grep fixed string
+zipdir("src", "src.zip")               # zip a folder
+unzip("src.zip", "src_out")            # unzip to a folder
+```
+
 # APIs
+
+**Public API (stable in 0.2.0)**
 
 It contains following four commands types
 - Log
@@ -153,11 +172,29 @@ Format: `<status>_<action>([_list])`
 
 ---
 
-# Install
 
-Install Command:
+# Contributing (for maintainers & PRs)
 
+**Test**
+
+```bash
+python -m venv .venv && source .venv/bin/activate  # or .venv\Scripts\activate on Win
+pip install -e . pytest
+pytest -vv -ra
 ```
-pip install shsim
+
+**Code Style Check**
+```bash
+pylint src/shsim/core.py
 ```
 
+**Code Formatter**
+```bash
+black --line-length 80 src/shsim/core.py
+```
+
+**Clean**
+```bash
+# bash only
+./clean.sh
+```
